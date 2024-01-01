@@ -7,7 +7,6 @@ export default function App() {
 		<Routes>
 			<Route index element={<Home />} />
 			<Route path="/*" element={<Auth />} />
-			<Route path="*" element={<h1>Not Found</h1>} />
 		</Routes>
 	);
 }

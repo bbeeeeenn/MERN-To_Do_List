@@ -1,4 +1,4 @@
-small:not(.showPasswordLabel) {
+small.warning {
     color: red;
 }
 
