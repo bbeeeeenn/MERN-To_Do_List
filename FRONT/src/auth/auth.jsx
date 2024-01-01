@@ -4,10 +4,17 @@ import "./auth.css";
 
 export default function Auth() {
 	return (
-		<Routes>
-			<Route path="login" element={<Login />} />
-			<Route path="signup" element={<Signup />} />
-		</Routes>
+		<>
+			<Link to="/">
+				<button>&lt;- Home</button>
+			</Link>
+			<br />
+			<br />
+			<Routes>
+				<Route path="login" element={<Login />} />
+				<Route path="signup" element={<Signup />} />
+			</Routes>
+		</>
 	);
 }
 
