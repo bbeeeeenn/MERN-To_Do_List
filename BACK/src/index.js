@@ -3,10 +3,11 @@ import mongoose from "mongoose";
 import cors from "cors";
 import session from "express-session";
 import auth from "./Routes/auth.js";
+import todo from "./Routes/todo.js";
 
 const app = express();
 app.use(json());
-app.use(cors());
+app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use(
 	session({
 		secret: ["spaghetti", "zenith", "dio", "senku"],
@@ -15,7 +16,23 @@ app.use(
 	})
 );
 
-app.use("/auth", auth);
+// Routes
+app.use("/", auth);
+
+app.use((req, res, next) => {
+	if (!req.session.user) {
+		return res.status(401).json({
+			msg: "You're not logged-in.",
+		});
+	}
+	next();
+});
+
+app.use("/todo", todo);
+
+app.all("*", (req, res) => {
+	res.json({ msg: "Not Found." });
+});
 
 async function startApp(PORT = 3000) {
 	console.log("Connecting to the database.");

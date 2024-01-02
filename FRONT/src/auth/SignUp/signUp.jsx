@@ -1,23 +1,62 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Signup() {
-	const [form, setForm] = useState({
+	const navigate = useNavigate();
+	const [{ username, password, repeatedPassword }, setForm] = useState({
 		username: "",
 		password: "",
 		repeatedPassword: "",
 	});
-	const { username, password, repeatedPassword } = form;
+	const [loggedIn, setLoggedIn] = useState(true);
 
-	const [usernameValid, setUsernameValid] = useState(true);
+	useEffect(() => {
+		(async () => {
+			const response = await axios.get("/status");
+			if (response.data.loggedIn) {
+				navigate("/home");
+			} else {
+				setLoggedIn(false);
+			}
+		})();
+	}, []);
+
+	const [usernameValid, setUsernameValid] =
+		useState(1); /*0 = neutral, 1 = true, 2 = false*/
 	const passwordValid = password.length >= 5;
 	const repeatedPasswordValid =
 		password.length >= 5 && repeatedPassword === password;
-
 	const [showPassword, setShowPassword] = useState(false);
 
-	const handleUsernameChange = (e) => {
+	const [done, setdone] = useState(false);
+
+	const [abortController, setAbortController] = useState(null);
+	const handleUsernameChange = async (e) => {
+		setUsernameValid(0);
 		setForm((prev) => ({ ...prev, username: e.target.value }));
+
+		if (abortController) {
+			abortController.abort();
+		}
+		const newAbortController = new AbortController();
+		setAbortController(newAbortController);
+		try {
+			const response = await axios.get(`/user/${e.target.value}`, {
+				signal: newAbortController.signal,
+			});
+			if (response.data === "" || response.data.msg == "Not Found.") {
+				setUsernameValid(1);
+			} else {
+				setUsernameValid(2);
+			}
+		} catch (err) {
+			if (err.code === "ERR_CANCELED") {
+				console.log("A request has been canceled.");
+			} else {
+				console.error(err);
+			}
+		}
 	};
 	const handlePasswordChange = (e) => {
 		setForm((prev) => ({ ...prev, password: e.target.value }));
@@ -26,112 +65,154 @@ export default function Signup() {
 		setForm((prev) => ({ ...prev, repeatedPassword: e.target.value }));
 	};
 
-	// console.log(form);
+	const handleFormSubmit = async () => {
+		try {
+			await axios.post("/register", {
+				username,
+				password,
+			});
+			setdone(true);
+		} catch (err) {
+			// TO DO: Make a cancellation token
+			console.error;
+		}
+	};
 
-	return (
+	return loggedIn ? (
+		""
+	) : (
 		<>
 			<h1>Sign Up</h1>
-			<form
-				onSubmit={(e) => {
-					e.preventDefault();
-				}}
-			>
-				<label htmlFor="username">
-					Username
-					{username.length === 0 ? (
-						<small className="warning"> *</small>
-					) : (
-						""
-					)}
-				</label>
-				<br />
-				<input
-					type="text"
-					id="username"
-					onChange={handleUsernameChange}
-					className={usernameValid ? "valid" : ""}
-					autoComplete="off"
-				/>
-				<br />
-				<label htmlFor="password">
-					Password
-					{password.length == 0 ? (
-						<small className="warning"> *</small>
-					) : password.length < 5 ? (
-						<small className="warning">
-							{" "}
-							(Password must be at least 5 characters long.)
-						</small>
-					) : (
-						""
-					)}
-				</label>
-				<br />
-				<input
-					type={showPassword ? "text" : "password"}
-					id="password"
-					onChange={handlePasswordChange}
-					className={
-						password.length === 0
-							? ""
-							: passwordValid
-							? "valid"
-							: "invalid"
-					}
-					autoComplete="off"
-				/>
-				<br />
-				<label htmlFor="repeatPassword">
-					Repeat Password
-					{repeatedPassword.length === 0 ? (
-						<small className="warning"> *</small>
-					) : repeatedPassword.length < 5 ? (
-						<small className="warning">
-							{" "}
-							(Password must be at least 5 characters long.)
-						</small>
-					) : repeatedPassword !== password ? (
-						<small className="warning"> (Password doesn't match)</small>
-					) : (
-						""
-					)}
-				</label>
-				<br />
-				<input
-					type={showPassword ? "text" : "password"}
-					id="repeatPassword"
-					onChange={handleRepeatPasswordChange}
-					className={
-						repeatedPassword.length === 0
-							? ""
-							: repeatedPassword.length < 5
-							? "invalid"
-							: repeatedPasswordValid
-							? "valid"
-							: "invalid"
-					}
-				/>
-				<br />
-				<input
-					type="checkbox"
-					onChange={() => {
-						setShowPassword((prev) => !prev);
-					}}
-				/>
-				<small> (Show passwords)</small>
-				<br />
-				<br />
-				<button
-					type="submit"
-					disabled={!usernameValid || !repeatedPasswordValid}
-				>
-					Sign Up
-				</button>
-			</form>
-			<br />
-			<p>
-				Already have an account? <Link to="/login">Login</Link>
-			</p>
+			<hr />
+			{done ? (
+				<>
+					<h3>Account Created!</h3>
+					<br />
+					<Link to="/">Login</Link>
+				</>
+			) : (
+				<>
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+							handleFormSubmit();
+						}}
+					>
+						<label htmlFor="username">
+							Username
+							{username.length === 0 ? (
+								<small className="warning"> *</small>
+							) : usernameValid == 2 ? (
+								<small className="warning">
+									{" "}
+									Username already exists.
+								</small>
+							) : (
+								""
+							)}
+						</label>
+						<br />
+						<input
+							type="text"
+							id="username"
+							onChange={handleUsernameChange}
+							className={
+								username.length === 0
+									? ""
+									: usernameValid === 0
+									? ""
+									: usernameValid === 1
+									? "valid"
+									: "invalid"
+							}
+							autoComplete="off"
+						/>
+						<br />
+						<label htmlFor="password">
+							Password
+							{password.length == 0 ? (
+								<small className="warning"> *</small>
+							) : password.length < 5 ? (
+								<small className="warning">
+									{" "}
+									(Password must be at least 5 characters long.)
+								</small>
+							) : (
+								""
+							)}
+						</label>
+						<br />
+						<input
+							type={showPassword ? "text" : "password"}
+							id="password"
+							onChange={handlePasswordChange}
+							className={
+								password.length === 0
+									? ""
+									: passwordValid
+									? "valid"
+									: "invalid"
+							}
+							autoComplete="off"
+						/>
+						<br />
+						<label htmlFor="repeatPassword">
+							Repeat Password
+							{repeatedPassword.length === 0 ? (
+								<small className="warning"> *</small>
+							) : repeatedPassword.length < 5 ? (
+								<small className="warning">
+									{" "}
+									(Password must be at least 5 characters long.)
+								</small>
+							) : repeatedPassword !== password ? (
+								<small className="warning">
+									{" "}
+									(Password doesn't match)
+								</small>
+							) : (
+								""
+							)}
+						</label>
+						<br />
+						<input
+							type={showPassword ? "text" : "password"}
+							id="repeatPassword"
+							onChange={handleRepeatPasswordChange}
+							className={
+								repeatedPassword.length === 0
+									? ""
+									: repeatedPassword.length < 5
+									? "invalid"
+									: repeatedPasswordValid
+									? "valid"
+									: "invalid"
+							}
+						/>
+						<br />
+						<input
+							type="checkbox"
+							onChange={() => {
+								setShowPassword((prev) => !prev);
+							}}
+						/>
+						<small> (Show passwords)</small>
+						<br />
+						<button
+							type="submit"
+							disabled={usernameValid !== 1 || !repeatedPasswordValid}
+						>
+							Sign Up
+						</button>
+					</form>
+					<br />
+					<hr />
+					<p>
+						Already have an account? <Link to="/">Login</Link>
+					</p>
+					{/* TO DO: Make a status message section somewhere here. */}
+				</>
+			)}
 		</>
 	);
 }
