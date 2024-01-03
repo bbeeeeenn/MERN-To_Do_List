@@ -15,7 +15,7 @@ export default function Home() {
 				setData(response.data);
 			} catch (err) {
 				if (err.response.status === 401) {
-					navigate("/");
+					navigate("/?loggedIn=false");
 					console.log(err);
 				} else {
 					console.error(err);
@@ -32,7 +32,7 @@ function ToDoList({ user }) {
 	async function handleLogoutClick() {
 		try {
 			const response = await axios.get("/logout");
-			navigate(`/`);
+			navigate(`/?loggedIn=false`);
 		} catch (err) {
 			console.error(err);
 		}

@@ -2,11 +2,16 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
+import Connecting from "../../Components/Connecting";
+import ServerError from "../../Components/ServerError";
+
 export default function Login() {
 	const navigate = useNavigate();
-	const [form, setForm] = useState({ username: "", password: "" });
-	const [loggedIn, setLoggedIn] = useState(true);
-	const [errorMessage, setErrorMessage] = useState("");
+	const loggedIn = new URLSearchParams(useLocation().search).get("loggedIn");
+
+	const [status, setStatus] = useState(
+		!loggedIn ? "connecting" : "not-logged-in"
+	);
 
 	useEffect(() => {
 		(async () => {
@@ -15,13 +20,34 @@ export default function Login() {
 				if (response.data.loggedIn) {
 					navigate("/home");
 				} else {
-					setLoggedIn(false);
+					setStatus("not-logged-in");
+					navigate("/?loggedIn=false");
 				}
 			} catch (err) {
-				console.error(err);
+				if (err.code == "ERR_NETWORK") {
+					setStatus("server-error");
+				} else {
+					console.error(err);
+				}
 			}
 		})();
 	}, []);
+
+	return status == "connecting" ? (
+		<Connecting />
+	) : status == "not-logged-in" ? (
+		<Form navigate={navigate} />
+	) : status == "server-error" ? (
+		<ServerError />
+	) : (
+		<h1>Unknown Error</h1>
+	);
+}
+
+function Form({ navigate }) {
+	const [form, setForm] = useState({ username: "", password: "" });
+
+	const [errorMessage, setErrorMessage] = useState("");
 
 	const handleUsernameChange = (e) => {
 		setForm((prev) => ({ ...prev, username: e.target.value }));
@@ -37,14 +63,15 @@ export default function Login() {
 			navigate("/home");
 			console.log(response);
 		} catch (err) {
-			setErrorMessage(err.response.data.msg);
 			console.error(err);
+			if (!err.response || !err.response.data) {
+				setErrorMessage("Unknown Error.");
+			} else {
+				setErrorMessage(err.response.data.msg);
+			}
 		}
 	}
-
-	return loggedIn ? (
-		""
-	) : (
+	return (
 		<>
 			<h1>Login</h1>
 			<hr />
@@ -80,7 +107,8 @@ export default function Login() {
 			<br />
 			<hr />
 			<p>
-				Don't have an account? <Link to="/signup">Sign Up</Link>
+				Don't have an account?{" "}
+				<Link to="/signup?loggedIn=false">Sign Up</Link>
 			</p>
 		</>
 	);

@@ -1,26 +1,54 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+
+import Connecting from "../../Components/Connecting";
+import ServerError from "../../Components/ServerError";
 
 export default function Signup() {
 	const navigate = useNavigate();
+	const loggedIn = new URLSearchParams(useLocation().search).get("loggedIn");
+	const [status, setStatus] = useState(
+		!loggedIn ? "connecting" : "not-logged-in"
+	);
+
+	useEffect(() => {
+		(async () => {
+			try {
+				const response = await axios.get("/status");
+				if (response.data.loggedIn) {
+					navigate("/home");
+				} else {
+					setStatus("not-logged-in");
+					navigate("/signup?loggedIn=false");
+				}
+			} catch (err) {
+				if (err.code == "ERR_NETWORK") {
+					setStatus("server-error");
+				} else {
+					console.error(err);
+				}
+			}
+		})();
+	}, []);
+
+	return status == "connecting" ? (
+		<Connecting />
+	) : status == "not-logged-in" ? (
+		<Form navigate={navigate} />
+	) : status == "server-error" ? (
+		<ServerError />
+	) : (
+		<h1>Unknown Error</h1>
+	);
+}
+
+function Form({ navigate }) {
 	const [{ username, password, repeatedPassword }, setForm] = useState({
 		username: "",
 		password: "",
 		repeatedPassword: "",
 	});
-	const [loggedIn, setLoggedIn] = useState(true);
-
-	useEffect(() => {
-		(async () => {
-			const response = await axios.get("/status");
-			if (response.data.loggedIn) {
-				navigate("/home");
-			} else {
-				setLoggedIn(false);
-			}
-		})();
-	}, []);
 
 	const [usernameValid, setUsernameValid] =
 		useState(1); /*0 = neutral, 1 = true, 2 = false*/
@@ -58,12 +86,10 @@ export default function Signup() {
 			}
 		}
 	};
-	const handlePasswordChange = (e) => {
+	const handlePasswordChange = (e) =>
 		setForm((prev) => ({ ...prev, password: e.target.value }));
-	};
-	const handleRepeatPasswordChange = (e) => {
+	const handleRepeatPasswordChange = (e) =>
 		setForm((prev) => ({ ...prev, repeatedPassword: e.target.value }));
-	};
 
 	const handleFormSubmit = async () => {
 		try {
@@ -77,10 +103,7 @@ export default function Signup() {
 			console.error;
 		}
 	};
-
-	return loggedIn ? (
-		""
-	) : (
+	return (
 		<>
 			<h1>Sign Up</h1>
 			<hr />
@@ -208,7 +231,8 @@ export default function Signup() {
 					<br />
 					<hr />
 					<p>
-						Already have an account? <Link to="/">Login</Link>
+						Already have an account?{" "}
+						<Link to="/?loggedIn=false">Login</Link>
 					</p>
 					{/* TO DO: Make a status message section somewhere here. */}
 				</>
