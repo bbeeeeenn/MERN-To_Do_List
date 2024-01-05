@@ -7,9 +7,10 @@
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-body {
+#root {
     height: 100vh;
-    display: flex;
-    align-items: center;
-    margin-left: 30%;
+    width: 100vw;
+    user-select: none;
+
+    outline: 1px solid;
 }

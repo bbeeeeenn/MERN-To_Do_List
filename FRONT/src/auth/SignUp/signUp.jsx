@@ -6,8 +6,8 @@ import Connecting from "../../Components/Connecting";
 import ServerError from "../../Components/ServerError";
 
 export default function Signup() {
-	const navigate = useNavigate();
 	const loggedIn = new URLSearchParams(useLocation().search).get("loggedIn");
+	const navigate = useNavigate();
 	const [status, setStatus] = useState(
 		!loggedIn ? "connecting" : "not-logged-in"
 	);

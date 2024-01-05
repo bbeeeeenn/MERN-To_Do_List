@@ -1,0 +1,48 @@
+.table-container {
+    display: flex;
+    justify-content: center;
+}
+
+table {
+    border-collapse: collapse;
+    width: clamp(250px, 90%, 700px);
+}
+
+caption {
+    font-size: larger;
+}
+
+.set {
+    border-radius: 10px;
+}
+
+.todo {
+    user-select: text;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    border: none;
+}
+
+.todo.done {
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+}
+
+.set {
+    cursor: pointer;
+    user-select: none;
+    padding: 0.5rem;
+    width: 0px;
+}
+
+.set.set-done {
+    color: green;
+}
+
+.set-add {
+    color: blue;
+}
+
+.set.set-delete {
+    color: red;
+}

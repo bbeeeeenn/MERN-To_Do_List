@@ -16,9 +16,17 @@ app.use(
 	})
 );
 
+app.use((req, res, next) => {
+	console.log(
+		`Handling ${req.method} ${req.url} from ${
+			req.ip
+		} ${new Date().toTimeString()}`
+	);
+	next();
+});
+
 // Routes
 app.use("/", auth);
-
 app.use((req, res, next) => {
 	if (!req.session.user) {
 		return res.status(401).json({
@@ -27,9 +35,7 @@ app.use((req, res, next) => {
 	}
 	next();
 });
-
 app.use("/todo", todo);
-
 app.all("*", (req, res) => {
 	res.json({ msg: "Not Found." });
 });
