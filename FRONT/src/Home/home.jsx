@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./home.css";
 
+import Connecting from "../Components/Connecting.jsx";
+
 export default function Home() {
 	const navigate = useNavigate();
 	const [loggedIn, setLoggedIn] = useState(false);
@@ -16,10 +18,11 @@ export default function Home() {
 				setData(response.data);
 				console.log(response);
 			} catch (err) {
-				if (err.response.status === 401) {
+				if (err.response?.status === 401) {
 					navigate("/?loggedIn=false");
-					console.log(err);
+					console.err(err);
 				} else {
+					navigate("/");
 					console.error(err);
 				}
 			}
@@ -29,18 +32,20 @@ export default function Home() {
 	async function handleLogoutClick() {
 		try {
 			const response = await axios.get("/logout");
-			navigate(`/?loggedIn=false`);
+			navigate(`/`);
 		} catch (err) {
 			console.error(err);
 		}
 	}
 
-	return (
+	return loggedIn ? (
 		<>
 			<h2 style={{ display: "inline" }}>{data.user} </h2>
 			<button onClick={handleLogoutClick}>Logout</button>
 			{loggedIn ? <ToDoList data={data} /> : ""}
 		</>
+	) : (
+		<Connecting />
 	);
 }
 
