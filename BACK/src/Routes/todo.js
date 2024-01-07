@@ -75,4 +75,33 @@ router.put("/:id", async (req, res) => {
 	}
 });
 
+// 4. DONE
+// To toggle "done"
+router.get("/done/:id", async (req, res) => {
+	const { id } = req.params;
+	const { user } = req.session;
+
+	try {
+		const userData = await UserData.findOne({ user });
+
+		if (!userData) {
+			return res.status(404).json({ msg: `User ${user} not found.` });
+		}
+		const todoItemIndex = userData.todos.findIndex(
+			(item) => item._id.toString() === id
+		);
+		if (todoItemIndex == -1) {
+			return res.status(404).json({ msg: `Item ${id} not found` });
+		}
+
+		const itemDoneStatus = userData.todos[todoItemIndex].done;
+
+		userData.todos[todoItemIndex].done = !itemDoneStatus;
+		await userData.save();
+		res.json({ msg: "Success" });
+	} catch (err) {
+		res.status(500).json({ msg: "Something went wrong." });
+	}
+});
+
 export default router;

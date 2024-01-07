@@ -16,10 +16,10 @@ export default function Home() {
 				const response = await axios.get("/todo");
 				setLoggedIn(true);
 				setData(response.data);
-				console.log(response);
+				// console.log(response);
 			} catch (err) {
 				if (err.response?.status === 401) {
-					navigate("/?loggedIn=false");
+					navigate("/");
 					console.err(err);
 				} else {
 					navigate("/");
@@ -31,7 +31,7 @@ export default function Home() {
 
 	async function handleLogoutClick() {
 		try {
-			const response = await axios.get("/logout");
+			await axios.get("/logout");
 			navigate(`/`);
 		} catch (err) {
 			console.error(err);
@@ -50,7 +50,23 @@ export default function Home() {
 }
 
 function ToDoList({ data }) {
-	return (
+	const [waiting, setWaiting] = useState(false);
+	const handleDoneClick = async (id) => {
+		try {
+			const response = await axios.get(`/todo/done/${id}`);
+			if (response.status === 200) {
+				setWaiting(true);
+				window.location.reload();
+			}
+		} catch (err) {
+			console.error(err);
+			setStatusMessage("Error");
+		}
+	};
+
+	return waiting ? (
+		<h1 className="table-container">Wait...</h1>
+	) : (
 		<>
 			<br />
 			<br />
@@ -73,7 +89,15 @@ function ToDoList({ data }) {
 						{data.userData?.todos.map(({ text, done, _id }) => (
 							<tr key={_id}>
 								<td className={`todo ${done ? "done" : ""}`}>{text}</td>
-								<td className="set set-done">Done</td>
+								<td
+									style={done ? { color: "red" } : {}}
+									className="set set-done"
+									onClick={() => {
+										handleDoneClick(_id);
+									}}
+								>
+									{!done ? "Done" : "Undone"}
+								</td>
 								<td className="set set-edit">Edit</td>
 								<td className="set set-delete">Delete</td>
 							</tr>

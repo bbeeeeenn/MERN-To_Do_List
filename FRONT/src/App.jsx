@@ -11,7 +11,7 @@ export const Context = createContext();
 export default function App() {
 	const [loggedIn, setLoggedIn] = useState(false);
 	return (
-		<Context.Provider value={{ loggedIn, setLoggedIn }}>
+		<Context.Provider value={{ name: "Ben" }}>
 			<Routes>
 				<Route index element={<Login />} />
 				<Route path="signup" element={<Signup />} />

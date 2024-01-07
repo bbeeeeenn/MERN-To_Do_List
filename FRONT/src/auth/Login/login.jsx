@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import Connecting from "../../Components/Connecting";
@@ -7,11 +7,8 @@ import ServerError from "../../Components/ServerError";
 
 export default function Login() {
 	const navigate = useNavigate();
-	const loggedIn = new URLSearchParams(useLocation().search).get("loggedIn");
 
-	const [status, setStatus] = useState(
-		!loggedIn ? "connecting" : "not-logged-in"
-	);
+	const [status, setStatus] = useState("connecting");
 
 	useEffect(() => {
 		(async () => {
@@ -21,7 +18,7 @@ export default function Login() {
 					navigate("/home");
 				} else {
 					setStatus("not-logged-in");
-					navigate("/?loggedIn=false");
+					navigate("/");
 				}
 			} catch (err) {
 				if (err.code == "ERR_NETWORK") {
@@ -61,7 +58,7 @@ function Form({ navigate }) {
 			const response = await axios.post("/login", form);
 			setErrorMessage("");
 			navigate("/home");
-			console.log(response);
+			// console.log(response);
 		} catch (err) {
 			console.error(err);
 			if (!err.response || !err.response.data) {
@@ -107,8 +104,7 @@ function Form({ navigate }) {
 			<br />
 			<hr />
 			<p>
-				Don't have an account?{" "}
-				<Link to="/signup?loggedIn=false">Sign Up</Link>
+				Don't have an account? <Link to="/signup">Sign Up</Link>
 			</p>
 		</>
 	);

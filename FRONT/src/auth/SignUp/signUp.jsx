@@ -1,16 +1,13 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Connecting from "../../Components/Connecting";
 import ServerError from "../../Components/ServerError";
 
 export default function Signup() {
-	const loggedIn = new URLSearchParams(useLocation().search).get("loggedIn");
 	const navigate = useNavigate();
-	const [status, setStatus] = useState(
-		!loggedIn ? "connecting" : "not-logged-in"
-	);
+	const [status, setStatus] = useState("connecting");
 
 	useEffect(() => {
 		(async () => {
@@ -20,7 +17,7 @@ export default function Signup() {
 					navigate("/home");
 				} else {
 					setStatus("not-logged-in");
-					navigate("/signup?loggedIn=false");
+					navigate("/signup");
 				}
 			} catch (err) {
 				if (err.code == "ERR_NETWORK") {
@@ -80,9 +77,9 @@ function Form({ navigate }) {
 			}
 		} catch (err) {
 			if (err.code === "ERR_CANCELED") {
-				console.log("A request has been canceled.");
+				// console.log("A request has been canceled.");
 			} else {
-				console.error(err);
+				// console.error(err);
 			}
 		}
 	};
@@ -231,8 +228,7 @@ function Form({ navigate }) {
 					<br />
 					<hr />
 					<p>
-						Already have an account?{" "}
-						<Link to="/?loggedIn=false">Login</Link>
+						Already have an account? <Link to="/">Login</Link>
 					</p>
 					{/* TO DO: Make a status message section somewhere here. */}
 				</>
