@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import SignUpForm from "./SignUpForm";
 import Connecting from "../../Components/Connecting";
@@ -18,7 +18,6 @@ export default function Signup() {
 					navigate("/home");
 				} else {
 					setStatus("not-logged-in");
-					navigate("/signup");
 				}
 			} catch (err) {
 				if (err.code == "ERR_NETWORK") {

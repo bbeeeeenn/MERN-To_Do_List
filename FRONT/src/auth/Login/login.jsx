@@ -1,6 +1,6 @@
-import { useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import LoginForm from "./LoginForm";
 import Connecting from "../../Components/Connecting";
@@ -8,7 +8,6 @@ import ServerError from "../../Components/ServerError";
 
 export default function Login() {
 	const navigate = useNavigate();
-
 	const [status, setStatus] = useState("connecting");
 
 	useEffect(() => {
@@ -19,7 +18,6 @@ export default function Login() {
 					navigate("/home");
 				} else {
 					setStatus("not-logged-in");
-					navigate("/");
 				}
 			} catch (err) {
 				if (err.code == "ERR_NETWORK") {

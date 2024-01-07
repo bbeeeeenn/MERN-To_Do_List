@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./home.css";
 
-import Connecting from "../Components/Connecting.jsx";
+import Connecting from "../SmolComponents/Connecting.jsx";
 
 export default function Home() {
 	const navigate = useNavigate();
