@@ -5,6 +5,7 @@ import "./home.css";
 
 import ToDoList from "./ToDoLists/ToDoList.jsx";
 import Add from "./Add/Add.jsx";
+import Edit from "./Edit/Edit.jsx";
 import Connecting from "../SmolComponents/Connecting.jsx";
 import ServerError from "../SmolComponents/ServerError.jsx";
 
@@ -54,6 +55,7 @@ export default function Home() {
 					<Routes>
 						<Route index element={<ToDoList data={data} />} />
 						<Route path="/add" element={<Add />} />
+						<Route path="/edit" element={<Edit />} />
 					</Routes>
 				) : (
 					""

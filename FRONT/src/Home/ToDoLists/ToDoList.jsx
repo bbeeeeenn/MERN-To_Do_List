@@ -21,10 +21,13 @@ export default function ToDoList({ data }) {
 		}
 	};
 
+	const handleEditClick = (text, id) => {
+		navigate("edit", { state: { text, id } });
+	};
+
 	const handleDeleteClick = async (id) => {
 		try {
 			const response = await axios.delete(`/todo/${id}`);
-			console.log(response.data);
 			window.location.reload();
 		} catch (err) {
 			console.error(err);
@@ -66,7 +69,14 @@ export default function ToDoList({ data }) {
 							>
 								{!done ? "Done" : "Undone"}
 							</td>
-							<td className="set set-edit">Edit</td>
+							<td
+								className="set set-edit"
+								onClick={() => {
+									handleEditClick(text, _id);
+								}}
+							>
+								Edit
+							</td>
 							<td
 								className="set set-delete"
 								onClick={() => {
