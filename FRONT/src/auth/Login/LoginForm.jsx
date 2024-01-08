@@ -19,7 +19,6 @@ export default function Form({ navigate }) {
 			const response = await axios.post("/login", form);
 			setErrorMessage("");
 			navigate("/home");
-			// console.log(response);
 		} catch (err) {
 			console.error(err);
 			if (!err.response || !err.response.data) {
