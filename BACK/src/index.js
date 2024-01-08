@@ -18,6 +18,10 @@ app.use(
 		secret: ["spaghetti", "zenith", "dio", "senku"],
 		resave: false,
 		saveUninitialized: false,
+		cookie: {
+			secure: true,
+			sameSite: "none",
+		},
 	})
 );
 
