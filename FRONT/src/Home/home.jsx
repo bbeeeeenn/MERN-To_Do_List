@@ -24,7 +24,7 @@ export default function Home() {
 			} catch (err) {
 				if (err.response?.status === 401) {
 					navigate("/");
-					console.err(err);
+					console.error(err);
 				} else {
 					setError(true);
 					console.error(err);
