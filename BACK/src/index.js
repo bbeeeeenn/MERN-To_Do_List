@@ -7,7 +7,12 @@ import todo from "./Routes/todo.js";
 
 const app = express();
 app.use(json());
-app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+app.use(
+	cors({
+		credentials: true,
+		origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+	})
+);
 app.use(
 	session({
 		secret: ["spaghetti", "zenith", "dio", "senku"],
@@ -43,7 +48,9 @@ app.all("*", (req, res) => {
 async function startApp(PORT = 3000) {
 	console.log("Connecting to the database.");
 	try {
-		await mongoose.connect("mongodb://127.0.0.1:27017/todolist");
+		await mongoose.connect(
+			process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/todolist"
+		);
 		console.log("Connected!");
 		app.listen(PORT, () => {
 			console.log(`App is listening on port ${PORT}`);
