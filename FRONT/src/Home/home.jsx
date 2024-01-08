@@ -6,11 +6,13 @@ import "./home.css";
 import ToDoList from "./ToDoLists/ToDoList.jsx";
 import Add from "./Add/Add.jsx";
 import Connecting from "../SmolComponents/Connecting.jsx";
+import ServerError from "../SmolComponents/ServerError.jsx";
 
 export default function Home() {
 	const navigate = useNavigate();
 	const [loggedIn, setLoggedIn] = useState(false);
 	const [data, setData] = useState({});
+	const [error, setError] = useState(false);
 
 	useEffect(() => {
 		(async () => {
@@ -23,7 +25,7 @@ export default function Home() {
 					navigate("/");
 					console.err(err);
 				} else {
-					navigate("/");
+					setError(true);
 					console.error(err);
 				}
 			}
@@ -39,7 +41,9 @@ export default function Home() {
 		}
 	}
 
-	return loggedIn ? (
+	return error ? (
+		<ServerError />
+	) : loggedIn ? (
 		<>
 			<h2 style={{ display: "inline" }}>{data.user} </h2>
 			<button onClick={handleLogoutClick}>Logout</button>

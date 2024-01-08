@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ServerError from "../../SmolComponents/ServerError";
 
 export default function ToDoList({ data }) {
 	const navigate = useNavigate();
 	const [waiting, setWaiting] = useState(false);
+	const [error, setError] = useState(false);
 
 	const handleDoneClick = async (id) => {
 		try {
@@ -15,17 +17,24 @@ export default function ToDoList({ data }) {
 			}
 		} catch (err) {
 			console.error(err);
+			setError(true);
 		}
 	};
 
-	const handleDeleteClick = async () => {
+	const handleDeleteClick = async (id) => {
 		try {
+			const response = await axios.delete(`/todo/${id}`);
+			console.log(response.data);
+			window.location.reload();
 		} catch (err) {
 			console.error(err);
+			setError(true);
 		}
 	};
 
-	return waiting ? (
+	return error ? (
+		<ServerError />
+	) : waiting ? (
 		<h1 className="table-container">Wait...</h1>
 	) : (
 		<>

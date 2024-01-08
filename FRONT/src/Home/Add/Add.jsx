@@ -2,9 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+import ServerError from "../../SmolComponents/ServerError";
+
 export default function Add() {
 	const navigate = useNavigate();
 	const [todo, setTodo] = useState("");
+	const [error, setError] = useState(false);
 
 	const handleInputChange = (e) => {
 		setTodo(e.target.value);
@@ -14,6 +17,7 @@ export default function Add() {
 			const response = await axios.post("/todo", { text: todo });
 			window.location.href = "/home";
 		} catch (err) {
+			setError(true);
 			console.error(err);
 		}
 	};
@@ -22,7 +26,9 @@ export default function Add() {
 		navigate("/home");
 	};
 
-	return (
+	return error ? (
+		<ServerError />
+	) : (
 		<>
 			<form
 				onSubmit={(e) => {
@@ -37,7 +43,12 @@ export default function Add() {
 				<br />
 				<label htmlFor="add">Add To-Do</label>
 				<br />
-				<input type="text" id="add" onChange={handleInputChange} />
+				<input
+					type="text"
+					id="add"
+					autoComplete="off"
+					onChange={handleInputChange}
+				/>
 				<br />
 				<button type="submit" disabled={todo.length <= 0}>
 					Submit
