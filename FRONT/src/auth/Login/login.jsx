@@ -14,6 +14,7 @@ export default function Login() {
 		(async () => {
 			try {
 				const response = await axios.get("/status");
+				console.log(response);
 				if (response.data.loggedIn) {
 					navigate("/home");
 				} else {
