@@ -1,22 +1,21 @@
-.table-container {
+.todo-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 table {
     border-collapse: collapse;
     width: clamp(250px, 90%, 700px);
+    overflow: hidden;
 }
 
 caption {
     font-size: larger;
 }
 
-.set {
-    border-radius: 10px;
-}
-
 .todo {
+    color: green;
     user-select: text;
     padding: 0.5rem 1rem;
     text-align: center;
@@ -24,6 +23,8 @@ caption {
 }
 
 .todo.done {
+    font-style: italic;
+    color: #bbbbbb;
     text-decoration: line-through;
     text-decoration-thickness: 2px;
 }
@@ -36,13 +37,29 @@ caption {
 }
 
 .set.set-done {
-    color: green;
+    color: white;
+    background: green;
+}
+
+.set.set-done.true {
+    background: rgb(153, 179, 7);
 }
 
 .set-add {
+    cursor: pointer;
     color: blue;
+    height: 30px;
 }
 
 .set.set-delete {
-    color: red;
+    color: white;
+    background: black;
+
+    &:hover {
+        background: red;
+    }
+}
+
+tbody tr:hover .todo {
+    background: #e4e4e4;
 }

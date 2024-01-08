@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import SignUpForm from "./SignUpForm";
-import Connecting from "../../Components/Connecting";
-import ServerError from "../../Components/ServerError";
+import Connecting from "../../SmolComponents/Connecting";
+import ServerError from "../../SmolComponents/ServerError";
 
 export default function Signup() {
 	const navigate = useNavigate();

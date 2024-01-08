@@ -8,9 +8,6 @@
 }
 
 #root {
-    height: 100vh;
-    width: 100vw;
+    padding: 2rem;
     user-select: none;
-
-    outline: 1px solid;
 }

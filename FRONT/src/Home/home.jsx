@@ -1,9 +1,10 @@
+import { Routes, Route, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "./home.css";
 
 import ToDoList from "./ToDoLists/ToDoList.jsx";
+import Add from "./Add/Add.jsx";
 import Connecting from "../SmolComponents/Connecting.jsx";
 
 export default function Home() {
@@ -42,7 +43,18 @@ export default function Home() {
 		<>
 			<h2 style={{ display: "inline" }}>{data.user} </h2>
 			<button onClick={handleLogoutClick}>Logout</button>
-			{loggedIn ? <ToDoList data={data} /> : ""}
+			<br />
+			<br />
+			<div className="todo-container">
+				{loggedIn ? (
+					<Routes>
+						<Route index element={<ToDoList data={data} />} />
+						<Route path="/add" element={<Add />} />
+					</Routes>
+				) : (
+					""
+				)}
+			</div>
 		</>
 	) : (
 		<Connecting />
