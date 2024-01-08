@@ -21,7 +21,6 @@ app.use(
 		cookie: {
 			secure: true,
 			sameSite: "none",
-			domain: "https://todolist-back-91et.onrender.com",
 		},
 	})
 );
