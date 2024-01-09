@@ -34,6 +34,7 @@ app.use((req, res, next) => {
 	);
 	res.cookie("test", "test", {
 		domain: ".netlify.app",
+		sameSite: "none",
 	});
 	next();
 });
