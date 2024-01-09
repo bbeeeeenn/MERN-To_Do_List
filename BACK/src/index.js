@@ -32,6 +32,9 @@ app.use((req, res, next) => {
 			req.ip
 		} ${new Date().toTimeString()}`
 	);
+	res.cookie("test", "test", {
+		domain: ".netlify.app",
+	});
 	next();
 });
 
