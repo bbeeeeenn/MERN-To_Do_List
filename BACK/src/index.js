@@ -15,7 +15,7 @@ app.use(
 );
 app.use(
 	session({
-		secret: ["spaghetti", "zenith", "dio", "senku"],
+		secret: "spaghetti",
 		resave: false,
 		saveUninitialized: false,
 		cookie: {
