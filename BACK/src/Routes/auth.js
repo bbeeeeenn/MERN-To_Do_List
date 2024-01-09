@@ -6,7 +6,6 @@ const router = Router();
 
 // 1. Status
 router.get("/status", async (req, res) => {
-	res.cookie("test", "test");
 	res.json({
 		loggedIn: req.session.user ? true : false,
 		user: req.session.user || null,
