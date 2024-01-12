@@ -19,9 +19,9 @@ app.use(
 		resave: false,
 		saveUninitialized: false,
 		cookie: {
+			domain: "todolist-back-91et.onrender.com",
 			secure: true,
 			sameSite: "none",
-			domain: "todolist-back-91et.onrender.com",
 		},
 	})
 );
