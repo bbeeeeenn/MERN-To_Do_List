@@ -33,7 +33,7 @@ app.use((req, res, next) => {
 		} ${new Date().toTimeString()}`
 	);
 	res.cookie("test", "test", {
-		domain: "https://todo-list83.netlify.app/",
+		domain: ".netlify.app",
 		sameSite: "none",
 		secure: true,
 	});
