@@ -19,7 +19,7 @@ app.use(
 		resave: false,
 		saveUninitialized: false,
 		cookie: {
-			domain: ".onrender.com",
+			domain: "todolist-back-91et.onrender.com",
 			secure: true,
 			sameSite: "none",
 		},
@@ -33,7 +33,7 @@ app.use((req, res, next) => {
 		} ${new Date().toTimeString()}`
 	);
 	res.cookie("test", "test", {
-		domain: ".onrender.com",
+		domain: "todolist-back-91et.onrender.com",
 		sameSite: "none",
 		secure: true,
 	});
