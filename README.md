@@ -1,2 +1,3 @@
-# UNDER DEVELOPMENT (On-Hold)
+# UNDER DEVELOPMENT
+
 ## To-Do List
