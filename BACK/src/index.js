@@ -5,7 +5,7 @@ import session from "express-session";
 import auth from "./Routes/auth.js";
 import todo from "./Routes/todo.js";
 import "dotenv/config.js";
-console.log(process.env.CORS_ORIGIN);
+console.log(process.env);
 
 const app = express();
 app.use(json());
@@ -15,16 +15,19 @@ app.use(
 		origin: process.env.CORS_ORIGIN,
 	})
 );
+
 app.use(
 	session({
 		secret: "spaghetti",
 		resave: false,
 		saveUninitialized: false,
-		cookie: {
-			domain: process.env.COOKIE_DOMAIN,
-			secure: true,
-			sameSite: "none",
-		},
+		cookie: process.env.LOCAL
+			? {}
+			: {
+					domain: process.env.COOKIE_DOMAIN,
+					secure: true,
+					sameSite: "none",
+			  },
 	})
 );
 
@@ -35,11 +38,11 @@ app.use((req, res, next) => {
 			req.ip
 		} ${new Date().toTimeString()}`
 	);
-	res.cookie("test", "test", {
-		domain: process.env.COOKIE_DOMAIN,
-		sameSite: "none",
-		secure: true,
-	});
+	// res.cookie("test", "test", {
+	// 	domain: process.env.COOKIE_DOMAIN,
+	// 	sameSite: "none",
+	// 	secure: true,
+	// });
 	next();
 });
 
@@ -61,9 +64,7 @@ app.all("*", (req, res) => {
 async function startApp(PORT = 3000) {
 	console.log("Connecting to the database.");
 	try {
-		await mongoose.connect(
-			process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/todolist"
-		);
+		await mongoose.connect(process.env.MONGODB_URI);
 		console.log("Connected!");
 		app.listen(PORT, () => {
 			console.log(`App is listening on port ${PORT}`);

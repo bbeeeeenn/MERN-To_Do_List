@@ -6,7 +6,6 @@ import NotFound from "./NotFound/notFound.jsx";
 import "./Auth/auth.css";
 
 export default function App() {
-	console.log(import.meta.env);
 	return (
 		<Routes>
 			<Route index element={<Login />} />
