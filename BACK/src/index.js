@@ -4,13 +4,14 @@ import cors from "cors";
 import session from "express-session";
 import auth from "./Routes/auth.js";
 import todo from "./Routes/todo.js";
+import "dotenv/config.js";
 
 const app = express();
 app.use(json());
 app.use(
 	cors({
 		credentials: true,
-		origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+		origin: process.env.CORS_ORIGIN,
 	})
 );
 app.use(
@@ -19,7 +20,7 @@ app.use(
 		resave: false,
 		saveUninitialized: false,
 		cookie: {
-			// domain: "todolist-back-91et.onrender.com",
+			domain: "todolist-back-91et.onrender.com",
 			secure: true,
 			sameSite: "none",
 		},
@@ -27,6 +28,7 @@ app.use(
 );
 
 app.use((req, res, next) => {
+	console.log(process.env.CORS_ORIGIN);
 	console.log(
 		`Handling ${req.method} ${req.url} from ${
 			req.ip
