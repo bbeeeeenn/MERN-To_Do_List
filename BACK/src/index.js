@@ -5,7 +5,6 @@ import session from "express-session";
 import auth from "./Routes/auth.js";
 import todo from "./Routes/todo.js";
 import "dotenv/config.js";
-console.log(process.env);
 
 const app = express();
 app.use(json());
