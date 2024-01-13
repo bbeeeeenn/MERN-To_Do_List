@@ -19,7 +19,7 @@ app.use(
 		resave: false,
 		saveUninitialized: false,
 		cookie: {
-			domain: "todolist-back-91et.onrender.com",
+			// domain: "todolist-back-91et.onrender.com",
 			secure: true,
 			sameSite: "none",
 		},
