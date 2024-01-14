@@ -18,7 +18,7 @@ app.use(
 
 app.use(
 	session({
-		secret: "spaghetti",
+		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,
 		store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
@@ -28,6 +28,7 @@ app.use(
 					domain: process.env.COOKIE_DOMAIN,
 					secure: true,
 					sameSite: "none",
+					path: "/",
 			  },
 	})
 );
