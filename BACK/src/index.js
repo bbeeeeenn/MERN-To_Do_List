@@ -1,5 +1,6 @@
 import express, { json } from "express";
 import mongoose from "mongoose";
+import MongoStore from "connect-mongo";
 import cors from "cors";
 import session from "express-session";
 import auth from "./Routes/auth.js";
@@ -20,6 +21,7 @@ app.use(
 		secret: "spaghetti",
 		resave: false,
 		saveUninitialized: false,
+		store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
 		cookie: process.env.LOCAL
 			? {}
 			: {
