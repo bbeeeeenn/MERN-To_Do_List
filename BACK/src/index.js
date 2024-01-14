@@ -26,7 +26,7 @@ app.use(
 			? {}
 			: {
 					domain: process.env.COOKIE_DOMAIN,
-					secure: "auto",
+					secure: true,
 					sameSite: "none",
 					path: "/",
 			  },
