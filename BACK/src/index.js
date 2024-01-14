@@ -40,11 +40,11 @@ app.use((req, res, next) => {
 			req.ip
 		} ${new Date().toTimeString()}`
 	);
-	// res.cookie("test", "test", {
-	// 	domain: process.env.COOKIE_DOMAIN,
-	// 	sameSite: "none",
-	// 	secure: true,
-	// });
+	res.cookie("test", "test", {
+		domain: process.env.COOKIE_DOMAIN,
+		sameSite: "none",
+		secure: true,
+	});
 	next();
 });
 
