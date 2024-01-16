@@ -14,17 +14,18 @@ export default function Login() {
 		(async () => {
 			try {
 				const response = await axios.get("/status");
-				console.log(response);
+				// console.log(response);
 				if (response.data.loggedIn) {
 					navigate("/home");
 				} else {
 					setStatus("not-logged-in");
 				}
 			} catch (err) {
+				console.error(err);
 				if (err.code == "ERR_NETWORK") {
 					setStatus("server-error");
 				} else {
-					console.error(err);
+					setStatus("unknown-error");
 				}
 			}
 		})();
