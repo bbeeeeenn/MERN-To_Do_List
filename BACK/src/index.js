@@ -35,17 +35,16 @@ app.use(
 );
 
 app.use((req, res, next) => {
-	console.log(process.env.CORS_ORIGIN);
 	console.log(
 		`Handling ${req.method} ${req.url} from ${
 			req.ip
 		} ${new Date().toTimeString()}`
 	);
-	res.cookie("test", "test", {
-		domain: process.env.COOKIE_DOMAIN,
-		sameSite: "none",
-		secure: true,
-	});
+	// res.cookie("test", "test", {
+	// 	domain: process.env.COOKIE_DOMAIN,
+	// 	sameSite: "none",
+	// 	secure: true,
+	// });
 	next();
 });
 
@@ -70,7 +69,7 @@ async function startApp(PORT = 3000) {
 		await mongoose.connect(process.env.MONGODB_URI);
 		console.log("Connected!");
 		app.listen(PORT, () => {
-			console.log(`App is listening on port ${PORT}`);
+			console.log(`App is listening on port ${PORT}.`);
 		});
 	} catch (err) {
 		console.error(err);
