@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./Home/Home.jsx";
 import Login from "./auth/Login/Loginx.jsx";
 import Signup from "./auth/SignUp/SignUp.jsx";
-import NotFound from "./NotFound/notFound.jsx";
+import NotFound from "./SmolComponents/NotFound.jsx";
 import "./auth/auth.css";
 
 export default function App() {
