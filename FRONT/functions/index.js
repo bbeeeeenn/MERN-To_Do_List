@@ -7,18 +7,22 @@ import auth from "./Routes/auth.js";
 import todo from "./Routes/todo.js";
 import "dotenv/config.js";
 
-mongoose.connect(process.env.MONGO_URI);
+mongoose.connect(
+	"mongodb+srv://tranquilzoiip:1152177913118@cluster0.kzc1onw.mongodb.net/test?retryWrites=true&w=majority"
+);
 
 const app = express();
 
 app.use(json());
 app.use(
 	session({
-		secret: process.env.SESSION_SECRET,
+		secret:
+			"mongodb+srv://tranquilzoiip:1152177913118@cluster0.kzc1onw.mongodb.net/test?retryWrites=true&w=majority",
 		resave: false,
 		saveUninitialized: false,
 		store: MongoStore.create({
-			mongoUrl: process.env.MONGO_URI,
+			mongoUrl:
+				"mongodb+srv://tranquilzoiip:1152177913118@cluster0.kzc1onw.mongodb.net/test?retryWrites=true&w=majority",
 		}),
 	})
 );
