@@ -71,14 +71,14 @@ router.post("/login", async (req, res) => {
 	}
 });
 
-router.use((req, res, next) => {
-	if (!req.session.user) {
-		return res.status(401).json({
-			msg: "You're not logged-in.",
-		});
-	}
-	next();
-});
+// router.use((req, res, next) => {
+// 	if (!req.session.user) {
+// 		return res.status(401).json({
+// 			msg: "You're not logged-in.",
+// 		});
+// 	}
+// 	next();
+// });
 
 // 5. Logout
 router.get("/logout", async (req, res) => {
