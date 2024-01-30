@@ -6,7 +6,7 @@ import NotFound from "./SmolComponents/NotFound.jsx";
 import "./auth/auth.css";
 
 export default function App() {
-	// console.log(import.meta.env);
+	console.log(import.meta.env);
 	return (
 		<Routes>
 			<Route index element={<Login />} />

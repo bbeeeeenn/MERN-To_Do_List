@@ -7,33 +7,21 @@ import auth from "./Routes/auth.js";
 import todo from "./Routes/todo.js";
 import "dotenv/config.js";
 
-mongoose.connect(
-	"mongodb+srv://tranquilzoiip:1152177913118@cluster0.kzc1onw.mongodb.net/test?retryWrites=true&w=majority"
-);
+mongoose.connect(process.env.MONGO_URI);
 
 const app = express();
-app.use(json());
 
+app.use(json());
 app.use(
 	session({
-		secret: "asd",
+		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,
 		store: MongoStore.create({
-			mongoUrl:
-				"mongodb+srv://tranquilzoiip:1152177913118@cluster0.kzc1onw.mongodb.net/test?retryWrites=true&w=majority",
+			mongoUrl: process.env.MONGO_URI,
 		}),
 	})
 );
-
-app.use((req, res, next) => {
-	console.log(
-		`Handling ${req.method} ${req.url} from ${
-			req.ip
-		} ${new Date().toTimeString()}`
-	);
-	next();
-});
 
 // Routes
 app.use("/api", auth);
