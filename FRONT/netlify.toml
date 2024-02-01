@@ -9,7 +9,7 @@
     status = 200
 
 [build]
-    functions = "functions"
+    functions = "server/functions"
 
 [build.environment]
-    NODE_VERSION = "18"
+    NODE_VERSION = "16"
