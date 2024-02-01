@@ -1,5 +1,5 @@
-import serverless from "serverless-http";
 import express, { json } from "express";
+import serverless from "serverless-http";
 import mongoose from "mongoose";
 import MongoStore from "connect-mongo";
 import session from "express-session";
