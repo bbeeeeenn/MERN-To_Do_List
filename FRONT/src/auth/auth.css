@@ -1,0 +1,21 @@
+small.warning {
+    color: red;
+}
+
+input {
+    border-style: solid;
+}
+
+input:focus {
+    outline: none;
+}
+
+input.valid {
+    color: green;
+    border-color: green;
+}
+
+input.invalid {
+    color: red;
+    border-color: red;
+}

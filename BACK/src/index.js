@@ -1,4 +1,3 @@
-import serverless from "serverless-http";
 import express, { json } from "express";
 import mongoose from "mongoose";
 import MongoStore from "connect-mongo";
@@ -8,10 +7,7 @@ import auth from "./Routes/auth.js";
 import todo from "./Routes/todo.js";
 import "dotenv/config.js";
 
-mongoose.connect(process.env.MONGO_URI);
-
 const app = express();
-
 app.use(json());
 app.use(
 	cors({
@@ -26,13 +22,15 @@ app.use(
 		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,
-		store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
-		cookie: {
-			domain: process.env.SERVER_DOMAIN,
-			secure: true,
-			sameSite: "none",
-			path: "/",
-		},
+		store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+		cookie: process.env.LOCAL
+			? {}
+			: {
+					domain: process.env.COOKIE_DOMAIN,
+					secure: true,
+					sameSite: "none",
+					path: "/",
+			  },
 	})
 );
 
@@ -42,6 +40,11 @@ app.use((req, res, next) => {
 			req.ip
 		} ${new Date().toTimeString()}`
 	);
+	// res.cookie("test", "test", {
+	// 	domain: process.env.COOKIE_DOMAIN,
+	// 	sameSite: "none",
+	// 	secure: true,
+	// });
 	next();
 });
 
@@ -60,4 +63,17 @@ app.all("*", (req, res) => {
 	res.json({ msg: "Not Found." });
 });
 
-export const handler = serverless(app);
+async function startApp(PORT = 3000) {
+	console.log("Connecting to the database.");
+	try {
+		await mongoose.connect(process.env.MONGODB_URI);
+		console.log("Connected!");
+		app.listen(PORT, () => {
+			console.log(`App is listening on port ${PORT}.`);
+		});
+	} catch (err) {
+		console.error(err);
+	}
+}
+
+startApp();
